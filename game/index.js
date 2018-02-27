@@ -1,4 +1,5 @@
-function Game(player1, player2) {
+function Game(id, player1, player2) {
+  this.id = id
   this.player1 = new Player(player1.name, player1.deck)
   this.player2 = new Player(player2.name, player2.deck)
 
@@ -50,3 +51,20 @@ function Trigger(time, effect) { // effect should be a function
 }
 
 function Card() {}
+
+const getRandomString = n => {
+  let str = []
+  let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  for (let i = 0; i < n; i++) {
+    str.push(alphabet[Math.floor(Math.random() * 26)])
+  }
+  return str.join('')
+}
+
+module.exports = {
+  Game,
+  Player,
+  Trigger,
+  Card,
+  getRandomString
+}

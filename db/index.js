@@ -7,6 +7,8 @@ let db = new Sequelize(dbUrl, {logging: false})
 // Import tables
 const models = [
   require('./models/user-model'),
+  require('./models/card-model'),
+  require('./models/collection-model'),
 ]
 
 models.forEach(model => {
@@ -14,7 +16,10 @@ models.forEach(model => {
 })
 
 // Associations
-let {User} = db.models
+let {User, Card, Collection} = db.models
+
+User.belongsToMany(Card, {through: Collection})
+Card.belongsToMany(User, {through: Collection})
 
 
 // Export db

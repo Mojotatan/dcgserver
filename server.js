@@ -11,15 +11,22 @@ db.sync()
 .then(() => {
   const server = app.listen(port, () => console.log(`Listening on port ${port}...`))
 
+
+  let games = []
+
   const io = require('socket.io')(server)
 
   io.on('connection', socket => {
     console.log('new connection', socket.id)
+    socket.join('lobby')
+    socket.emit('channel', 'lobby')
+    socket.emit('games_update', games)
     
-    require('./sockets')(socket)
+    require('./sockets')(io, socket, games)
 
     socket.on('disconnect', () => {
       console.log('user left', socket.id)
+      // prune dead game lobbies
     })
   })
 

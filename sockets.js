@@ -3,7 +3,17 @@ const bcrypt = require('bcrypt')
 
 const {User} = require('./db').db.models
 
-module.exports = socket => {
+const getRandomUniqueString = (n, arr) => {
+  let str = []
+  let alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'
+  for (let i = 0; i < n; i++) {
+    str.push(alphabet[Math.floor(Math.random() * 26)])
+  }
+  str = str.join('')
+  return (arr.filter(strInArr => strInArr === str).length === 0) ? str : getRandomUniqueString(n, arr)
+}
+
+module.exports = (io, socket, games) => {
   let user
 
   socket.on('login', (credentials) => {
@@ -36,7 +46,22 @@ module.exports = socket => {
     })
   })
 
+  socket.on('chat', data => {
+    io.in(data.channel).emit('chat', `${user.name}: ${data.message}`)
+  })
+
+  socket.on('new_game', data => {
+    let id = getRandomUniqueString(4, games)
+    games.push(id)
+    socket.leave('lobby')
+    socket.join(id)
+    socket.emit('channel', id)
+    socket.to('lobby').emit('games_update', games)
+  })
+
   socket.on('logout', () => {
     user = null
   })
+
+  return user
 }
