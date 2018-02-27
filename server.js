@@ -5,11 +5,23 @@ const path = require('path')
 
 const db = require('./db').db
 
-let port = process.env.PORT || '3000'
+let port = process.env.PORT || '8080'
 const app = express()
-db.sync({force: true})
+db.sync()
 .then(() => {
   const server = app.listen(port, () => console.log(`Listening on port ${port}...`))
+
+  const io = require('socket.io')(server)
+
+  io.on('connection', socket => {
+    console.log('new connection', socket.id)
+    
+    require('./sockets')(socket)
+
+    socket.on('disconnect', () => {
+      console.log('user left', socket.id)
+    })
+  })
 
   app
     .use(morgan('tiny'))

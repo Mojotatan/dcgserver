@@ -1,13 +1,16 @@
 import React, { Component } from 'react'
 import {Route, Link} from 'react-router-dom'
 
-import Menu from './containers/Menu'
+import Login from './components/Login'
+import Menu from './components/Menu'
 
 
-const App = () => (
+
+const App = (props) => (
   <div className="app">
     <main>
-      <Route path="/menu" component={Menu} />
+      <Login socket={props.socket} />
+      <Route socket={props.socket} path="/menu" component={Menu} />
     </main>
   </div>
 )

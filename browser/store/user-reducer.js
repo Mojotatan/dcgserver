@@ -8,6 +8,9 @@ const reducer = (prevState = initialState, action) => {
     case LOAD_USER:
       newState.user = action.user
       return newState
+    case LOGOUT:
+      newState.user = null
+      return newState
     default:
       return newState
   }
@@ -19,6 +22,10 @@ export const loadUser = (user) => {
   return {type: LOAD_USER, user}
 }
 
+const LOGOUT = 'LOGOUT'
+export const logout = () => {
+  return {type: LOGOUT}
+}
 
 // thunks
 
