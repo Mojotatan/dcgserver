@@ -20,10 +20,12 @@ class Chat extends React.Component {
 
   handleSubmit(e) {
     e.preventDefault()
-    this.props.socket.emit('chat', {message: this.state.message, channel: this.props.channel})
-    this.setState({
-      message: ''
-    })
+    if (this.state.message !== '') { // prevent blank lines from firing
+      this.props.socket.emit('chat', {message: this.state.message, channel: this.props.channel})
+      this.setState({
+        message: ''
+      })
+    }
   }
 
   render() {

@@ -9,6 +9,8 @@ const models = [
   require('./models/user-model'),
   require('./models/card-model'),
   require('./models/collection-model'),
+  require('./models/deck-model'),
+  require('./models/cardsindeck-model'),
 ]
 
 models.forEach(model => {
@@ -16,10 +18,16 @@ models.forEach(model => {
 })
 
 // Associations
-let {User, Card, Collection} = db.models
+let {User, Card, Collection, Deck, CardsInDeck} = db.models
 
 User.belongsToMany(Card, {through: Collection})
 Card.belongsToMany(User, {through: Collection})
+
+User.belongsToMany(Deck, {through: 'UserDeck'})
+Deck.belongsToMany(User, {through: 'UserDeck'})
+
+Card.belongsToMany(Deck, {through: CardsInDeck})
+Deck.belongsToMany(Card, {through: CardsInDeck})
 
 
 // Export db
